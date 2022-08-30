@@ -40,7 +40,7 @@ function cadastrarMensagens() {
   };
 
   if (descricaoHTML.value === "" || detalhamentoHTML.value === "") {
-    alert("Descrição ou Detalhamento em branco");
+    Swal.fire("Descrição ou Detalhamento em branco");
     resetMensagem();
     return;
   }
@@ -83,8 +83,8 @@ function listarRecados() {
     <th>${usuario.mensagens[index].descricao}</th>
     <th>${usuario.mensagens[index].detalhamento}</th>
     <th>
-    <button type="button" class="blue" onclick="editarMensagens(${usuario.mensagens[index].idMsg})">Editar</button>
-    <button type="button" class="red" onclick="apagarMensagens(${usuario.mensagens[index].idMsg})">Apagar</button>
+    <button type="button" class="blue" onclick="editarMensagens(${usuario.mensagens[index].idMsg})"><i class="fa-solid fa-pen-to-square"></i></button>
+    <button type="button" class="red" onclick="apagarMensagens(${usuario.mensagens[index].idMsg})"><i class="fa-solid fa-trash"></i></button>
     </th>
     </tr>`;
   }
@@ -137,14 +137,28 @@ function esconderModal() {
 }
 
 function apagarMensagens(id) {
-  let confirmaApagar = confirm("Deseja realmente apagar esta mensagem?");
-  if (confirmaApagar) {
-    const novaMensagem = usuario.mensagens.filter(
-      (newMsg) => newMsg.idMsg !== id
-    );
-    usuario.mensagens = novaMensagem;
-    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
-    listarRecados();
-    atualizarUsuarios();
-  }
+  Swal.fire({
+    title: "Você tem certeza?",
+    text: "Esta ação não poderá ser revertida!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#007a87",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sim, apagar!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire(
+        "Apagado!",
+        "Sua mensagem foi apagada com sucesso!!",
+        "success"
+      );
+      const novaMensagem = usuario.mensagens.filter(
+        (newMsg) => newMsg.idMsg !== id
+      );
+      usuario.mensagens = novaMensagem;
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+      listarRecados();
+      atualizarUsuarios();
+    }
+  });
 }

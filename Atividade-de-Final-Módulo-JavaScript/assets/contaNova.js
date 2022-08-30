@@ -6,29 +6,29 @@ let confirmacaoSenhaHTML = document.getElementById("novoSenhaUsuarioRepeat");
 let usuarios = buscarDadosStorage();
 
 function cadastrarUsuarios() {
-  let email = emailHTML.value;
+  let email = emailHTML.value.toLowerCase;
   let senha = senhaCadastradaHTML.value;
   let repSenha = confirmacaoSenhaHTML.value;
 
   let existe = usuarios.some((valor) => valor.email === email);
 
   if (existe) {
-    mensagemAlert("atencao", "Já existe esse e-mail cadastrado.");
+    Swal.fire("Já existe esse e-mail cadastrado.");
     return;
   }
 
   if (!senha || !repSenha) {
-    mensagemAlert("atencao", "Campo SENHA e/ou CONFIRMAÇÃO DE SENHA Vazios");
+    Swal.fire("Campo SENHA e/ou CONFIRMAÇÃO DE SENHA Vazios");
     return;
   }
 
   if (senha !== repSenha) {
-    mensagemAlert("erro", "Senhas não conferem!");
+    Swal.fire("Senhas não conferem!");
     resetCadastro();
     return;
   }
   if (senha.length < 5) {
-    mensagemAlert("atencao", "Digite uma senha de no mínimo 5 caracteres");
+    Swal.fire("Digite uma senha de no mínimo 5 caracteres");
     return;
   }
 
@@ -41,68 +41,46 @@ function cadastrarUsuarios() {
     mensagens: [],
   };
 
-  console.log(criarUsuario);
   usuarios.push(criarUsuario);
-
-  console.log(usuarios);
 
   salvarUsuarioStorage();
   retornarLogin();
+  resetCadastro();
 }
 
 formularioHTML.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
-  console.log(emailHTML.value);
-  console.log(senhaCadastradaHTML.value);
-  console.log(confirmacaoSenhaHTML.value);
 });
-function retornarLogin() {
-  alert("Cadastro Realizado com sucesso");
 
-  let confirmacao = confirm("Deseja voltar a tela inicial?");
-  if (confirmacao) {
-    resetCadastro();
-    mensagemAlert("sucesso", "Voltando para Login");
-    setTimeout(() => {
+function retornarLogin() {
+  let timerInterval;
+  Swal.fire({
+    title: "Cadastro Realizado com Sucesso!",
+    html: "Você será redirecionado a página de LOGIN em <b></b>.",
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft();
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    },
+  }).then((result) => {
+    if (result.dismiss === Swal.DismissReason.timer) {
       window.location.href = "index.html";
-    }, 2000);
-  } else {
-    resetCadastro();
-  }
-}
+      console.log("I was closed by the timer");
+    }
+  });
 
 function resetCadastro() {
   emailHTML.value = "";
   senhaCadastradaHTML.value = "";
   confirmacaoSenhaHTML.value = "";
-}
-
-function mensagemAlert(type, mensagem) {
-  let msg = document.getElementById("msgSucesso");
-
-  msg.innerText = mensagem;
-  msg.style.display = "block";
-  switch (type) {
-    case "sucesso":
-      msg.style.color = "green";
-      setTimeout(() => {
-        msg.style.display = "none";
-      }, 2500);
-      break;
-    case "erro":
-      msg.style.color = "red";
-      setTimeout(() => {
-        msg.style.display = "none";
-      }, 2000);
-      break;
-    default:
-      msg.style.color = "orange";
-      setTimeout(() => {
-        msg.style.display = "none";
-      }, 2000);
-      break;
-  }
 }
 
 function salvarUsuarioStorage() {
