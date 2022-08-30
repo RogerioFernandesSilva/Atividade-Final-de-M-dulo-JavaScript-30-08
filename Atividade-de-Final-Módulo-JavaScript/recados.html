@@ -1,0 +1,69 @@
+<html lang="pt-Br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>Sistema de Recados</title>
+  </head>
+  <body>
+    <main>
+      <section class="recados">
+        <h1>PAINEL DE RECADOS</h1>
+        <form>
+          <div>
+            <legend id="legenda">
+              Painel de Recados<span id="userEmail"></span>
+            </legend>
+            <label for="descricao">
+              <input type="text" name="descrição" maxlength="50" id="descricao"/>
+            </label>
+            <label for="detalhamento">
+              <input type="text" name="detalhamento" id="detalhamento" maxlength="50"/>
+            </label>
+          </div>
+        </form>
+        <div>
+          <button id="save">Salvar</button>
+        </div>
+        <div>
+          <button id="logout">Sair</button>
+        </div>
+      </section>
+      <section>
+        <table id="cabecalhoRecados">
+          <thead id="listaCabecalhoRecados">
+            <tr class="tabela">
+              <th>#</th>
+              <th>Descrição</th>
+              <th>Detalhamento</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="listaDeRecados"></tbody>
+        </table>
+      </section>
+      <div class="modal">
+        <div id="edit-mensagens" class="modal-div">
+          <form class="table">
+            <fieldset class="flex">
+              <legend>EDITAR MENSAGEM</legend>
+              <div class="inputPacote">
+                <input type="text" name="descricaoOPEdit" id="descricaoOPEdit" maxlength="50" class="form-control w-450"/>
+                <label for="descricaoOPEdit" class="control-label">Descrição</label>
+              </div>
+              <div class="inputPacote">
+                <input type="text" name="detalhamentoOPEdit" id="detalhamentoOPEdit" maxlength="50" class="form-control w-450"/>
+                <label for="detalhamentoOPEdit" class="control-label">Detalhamento</label>
+              </div>
+            </fieldset>
+            <button id="confirmEdit" type="button" class="blue-E">Confirmar</button>
+            <button id="closeEdit" type="button" class="red-E">Cancelar</button>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script src="assets/js/usuarioLocalStorage.js"></script>
+    <script src="assets/js/recados.js"></script>
+  </body>
+</html>

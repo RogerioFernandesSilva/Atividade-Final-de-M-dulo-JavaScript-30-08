@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>Criar Novo Acesso</title>
+  </head>
+  <body class="corpo"><aside class="barralateral">
+      <img class="foto" src="assets/images/e4e9f573b925abad8344795139b9db9a.jpg" alt="Tela Principal"/>
+    </aside>
+    <main>
+      <p id="msgSucesso"></p>
+      <section class="principal">
+        <h3>CRIAR CONTA</h3>
+        <form id="formulario" name="formulario">
+          <div>
+            <label for="emailCadastrado">
+              <input type="email" name="emailCadastrado" id="emailCadastrado" placeholder="E-MAIL" required/>
+            </label>
+          </div>
+          <div>
+            <label for="novoSenhaUsuario">
+              <input type="password" name="novoSenhaUsuario" id="novoSenhaUsuario" placeholder="SENHA" required/>
+            </label>
+          </div>
+          <div>
+            <label for="novoSenhaUsuarioRepeat">
+              <input type="password" name="novoSenhaUsuarioRepeat" id="novoSenhaUsuarioRepeat" placeholder="CONFIRME SUA SENHA" required/>
+            </label>
+          </div>
+          <input id="salvar" type="submit" onclick="cadastrarUsuarios();" value=" CADASTRAR NOVO USUÁRIO"/>
+        </form>
+        <div class="botao2">
+          <a href="index.html">VOLTAR A PÁGINA INICIAL</a>
+        </div>
+      </section>
+    </main>
+    <script src="assets/js/usuarioLocalStorage.js"></script>
+    <script src="assets/js/contaNova.js"></script>
+  </body>
+</html>
