@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-Br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <title>Login</title>
-  </head>
-  <body class="corpo">
-    <aside class="barralateral">
-      <img
-        class="foto"
-        src="assets/images/e4e9f573b925abad8344795139b9db9a.jpg"
-        alt="Tela Principal"/>
-    </aside>
-    <main>
-      <section class="principal">
-        <h2>ENTRAR NO SISTEMA DE RECADOS</h2>
-        <form>
-          <div>
-            <label for="emailUsuario">
-              <input type="email" name="emailUsuario" id="emailUsuario" placeholder="E-MAIL" required/>
-            </label>
-            <label for="senhaUsuario">
-              <input type="password" name="senhaUsuario" id="senhaUsuario" placeholder="SENHA" required/>
-            </label>
-          </div>
-        </form>
-        <button id="botao1" class="botao1">ENTRAR</button>
-        <div class="botao2">
-          <a href="contanova.html">CRIAR CONTA</a>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">  
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Página de recados</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Login página de recados</h1>
+
+            <div id="msgError"></div>
+
+            <div class="label-float">
+                <input type="text" id="usuario" placeholder="" required>
+                <label id="userLabel" for="usuario">Usuário</label>
+            </div>
+            <div class="label-float">
+                <input type="password" id="senha" placeholder="" required>
+                <label id="senhaLabel" for="senha">Senha</label>
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </div>
+            <div class="justify-center">
+                <button onclick="entrar()">Entrar</button>
+            </div>
+            <div class="justify-center">
+                <br>
+            </div>
+            <p>Não tem uma conta?
+            <a href="./cadastro.html">Cadastre-se</a></p>
         </div>
-      </section>
-    </main>
-    <script src="assets/js/usuarioLocalStorage.js"></script>
-    <script src="assets/js/index.js"></script>
-  </body>
+    </div>
+    <script src="./js/index.js"></script>
+</body>
 </html>
