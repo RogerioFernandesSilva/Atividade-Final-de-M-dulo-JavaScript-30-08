@@ -1,0 +1,239 @@
+index
+
+"use strict";
+if (localStorage.getItem('usuarioLogado')) {
+    alert('Você já está logado!');
+    window.location.href = 'messages.html';
+}
+const btnEntrar = document.getElementById('btnEntrar');
+btnEntrar.addEventListener('click', (e) => {
+    e.preventDefault();
+    let email = document.getElementById('email');
+    let password = document.getElementById('password');
+    let log = buscarDados();
+    let verificarUsuario = log.findIndex((usuario) => usuario.email === email.value && usuario.senha === password.value);
+    console.log(verificarUsuario);
+    if (verificarUsuario >= 0) {
+        const usuarioLogado = {
+            email: log[verificarUsuario].email,
+            messages: log[verificarUsuario].messages,
+        };
+        salvarDados(usuarioLogado);
+        setTimeout(() => {
+            window.location.href = 'messages.html';
+        }, 1000);
+    }
+    else {
+        alert('Cadastre-se primeiro.');
+    }
+});
+//arquivos com ignore para que eu possa usar as funções de forma duplicada; pois não comprometem o app.
+// @ts-ignore
+function salvarDados(usuarios) {
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuarios));
+}
+//arquivos com ignore para que eu possa usar as funções de forma duplicada; pois não comprometem o app.
+// @ts-ignore
+function buscarDados() {
+    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    return usuarios;
+}
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+loginCreate
+
+"use strict";
+let formHtml = document.getElementById('form');
+let usuarios = buscarDados();
+const btnCreate = document.getElementById('btnCreate');
+btnCreate.addEventListener('click', (e) => {
+    e.preventDefault();
+    let email = document.getElementById('emailCreate');
+    let password = document.getElementById('passwordCreate');
+    let password2 = document.getElementById('passwordCreate2');
+    if (emailExiste(email)) {
+        if (validarCampos(email, password, password2)) {
+            const usuario = {
+                email: email.value,
+                senha: password.value,
+                messages: [],
+            };
+            usuarios.push(usuario);
+            salvarDados(usuarios);
+            alert("Conta criada com sucesso!");
+            reset(email, password, password2);
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+    }
+});
+function emailExiste(email) {
+    let existe = usuarios.some((valor) => valor.email === email.value);
+    if (existe) {
+        alert("Email já cadastrado.");
+        return false;
+    }
+    return true;
+}
+function validarCampos(email, password, password2) {
+    if (!email.value) {
+        alert("Você deve preencher o e-mail.");
+        return false;
+    }
+    if (!password.value.length) {
+        alert("Senha precisa ser digitada.");
+        return false;
+    }
+    if (!password2.value.length) {
+        alert("Senha precisa ser digitada novamente.");
+        return false;
+    }
+    if (password.value !== password2.value) {
+        alert("As senhas não conferem.");
+        return false;
+    }
+    return true;
+}
+//arquivos com ignore para que eu possa usar as funções de forma duplicada; pois não comprometem o app.
+// @ts-ignore
+function salvarDados(usuarios) {
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+}
+//arquivos com ignore para que eu possa usar as funções de forma duplicada; pois não comprometem o app.
+// @ts-ignore
+function buscarDados() {
+    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    return usuarios;
+}
+function reset(email, password, password2) {
+    email.value = '';
+    password.value = '';
+    password2.value = '';
+}
+
+-------------------------------------------------------------------------------------------------------------------
+
+messages
+
+"use strict";
+if (!localStorage.getItem('usuarioLogado')) {
+    window.location.href = 'index.html';
+}
+const btnLogout = document.getElementById('logout');
+btnLogout.addEventListener('click', () => {
+    atualizaMessages();
+    localStorage.removeItem('usuarioLogado');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 1000);
+});
+let usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+printMessage();
+function atualizaMessages() {
+    let usuarioCadastrado = JSON.parse(localStorage.getItem('usuarios'));
+    usuarioCadastrado.forEach(element => {
+        if (element.email === usuario.email) {
+            element.messages = usuario.messages;
+        }
+    });
+    localStorage.setItem('usuarios', JSON.stringify(usuarioCadastrado));
+}
+const btnSalvarMensagem = document.getElementById('salvarMensagem');
+btnSalvarMensagem.addEventListener('click', createMessage);
+function createMessage() {
+    let id = 1;
+    const contato = document.getElementById('contato').value;
+    const mensagem = document.getElementById('mensagem').value;
+    if (!contato || !mensagem) {
+        alert('Campos devem ser preenchidos.');
+        return;
+    }
+    if (usuario.messages.length > 0) {
+        const idLastMessage = usuario.messages.reduce((acc, next) => {
+            if (acc.id < next.id) {
+                return next;
+            }
+            return acc;
+        });
+        id = idLastMessage.id + 1;
+    }
+    usuario.messages.push({ id, contato, mensagem });
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+    printMessage();
+    resetInput();
+}
+function printMessage() {
+    let table = document.getElementById('tbody');
+    table.innerHTML = '';
+    for (const index in usuario.messages) {
+        let order = Number(index) + 1;
+        table.innerHTML += `
+        <tr>
+              <th scope="row">${order}</th>
+              <td>${usuario.messages[index].contato}</td>
+              <td>${usuario.messages[index].mensagem}</td>
+              <td id="action">
+              <button id="btnEditar" onclick = "editMessage(${usuario.messages[index].id})">Editar</button>
+              <button id="btnApagar" onclick = "removeMessage(${usuario.messages[index].id})">Apagar</button>
+              </td>
+            </tr>
+        `;
+    }
+}
+let modalContato = document.getElementById('contatoEdit');
+let modalMensagem = document.getElementById('mensagemEdit');
+function editMessage(id) {
+    showModal();
+    modalPrintMessage(id);
+    const btnSave = document.getElementById('btnSave');
+    btnSave.onclick = () => {
+        changeMessage(id);
+        setTimeout(() => {
+            closeModal();
+        }, 500);
+    };
+    const btnCancel = document.getElementById('btnCancel');
+    btnCancel.addEventListener('click', closeModal);
+}
+function modalPrintMessage(id) {
+    const tempMessage = searchMessage(id);
+    modalContato.value = usuario.messages[tempMessage].contato;
+    modalMensagem.value = usuario.messages[tempMessage].mensagem;
+}
+function searchMessage(id) {
+    return usuario.messages.findIndex((message) => message.id === id);
+}
+function changeMessage(id) {
+    const tempMessage = searchMessage(id);
+    usuario.messages[tempMessage].contato = modalContato.value;
+    usuario.messages[tempMessage].mensagem = modalMensagem.value;
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+    printMessage();
+}
+function closeModal() {
+    //arquivos com ignore para que eu possa usar as funções de forma duplicada; pois não comprometem o app.
+    // @ts-ignore
+    document.getElementById('modal').style.display = 'none';
+}
+function showModal() {
+    //arquivos com ignore para que eu possa usar as funções de forma duplicada; pois não comprometem o app.
+    // @ts-ignore
+    document.getElementById('modal').style.display = 'block';
+}
+function removeMessage(id) {
+    const confirmation = confirm('A mensagem será apagada. Confirma?');
+    if (confirmation) {
+        const remove = usuario.messages.filter((message) => message.id !== id);
+        usuario.messages = remove;
+        localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+        printMessage();
+    }
+}
+function resetInput() {
+    const contatoInput = document.getElementById('contato');
+    contatoInput.value = '';
+    const mensagemInput = document.getElementById('mensagem');
+    mensagemInput.value = '';
+}
